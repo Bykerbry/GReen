@@ -47,8 +47,11 @@ export class GetPickupDateService {
     const pickUpDate  = new Date()
 
     if (isRefuseData) {
+      if(index === pickUpDate.getDay() && pickUpDate.getHours() > 15) {
+        pickUpDate.setDate(pickUpDate.getDate() + 7)
+        return pickUpDate
+      }
       pickUpDate.setDate(pickUpDate.getDate() + (index + 7 - pickUpDate.getDay()) % 7);
-      console.log(pickUpDate);
       return pickUpDate
     } else {   
       if (routeInfo.route) {
@@ -77,7 +80,6 @@ export class GetPickupDateService {
         daysUntilPickup = 14
     }
     pickUpDate.setDate(pickUpDate.getDate() + daysUntilPickup)
-    console.log(pickUpDate);
     return pickUpDate
   }
 

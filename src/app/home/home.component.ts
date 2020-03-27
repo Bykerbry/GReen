@@ -31,7 +31,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(LandingComponent);
       dialogRef.afterClosed().subscribe( data => {
         this.isLoading = data;
-        console.log(this.isLoading)
       } )
     }
     this._share.setHomeView(true);
