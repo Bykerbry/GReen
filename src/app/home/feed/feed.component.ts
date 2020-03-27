@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Inotification } from '../inotification';
-import { FeedService } from '../feed.service';
+import { INotification } from '../../interfaces';
+import { NotificationFeedService } from '../../services/notification-feed.service';
 
 
 @Component({
@@ -9,12 +9,13 @@ import { FeedService } from '../feed.service';
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit {
-notifications : Inotification[];
 
-  constructor(public service : FeedService){}
+  notifications : INotification[];
+
+  constructor(private _feed : NotificationFeedService){}
 
   ngOnInit() {
-    this.notifications = this.service.getNotifications();
+    this.notifications = this._feed.getNotifications();
   }
 
 }

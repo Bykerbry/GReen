@@ -37,6 +37,11 @@ header {
     color: black;
 }
 
+.footer-link:focus,
+.footer-link:hover {
+    opacity: .7;
+}
+
 footer {
     display: flex;
     font-size: 10px;

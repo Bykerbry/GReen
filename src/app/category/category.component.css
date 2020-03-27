@@ -30,6 +30,7 @@ p {
     border: none;
     text-align: center;
     width: 55%;
+    cursor: pointer;
 }
 
 #to_top:hover {
@@ -58,6 +59,7 @@ button {
   max-height: 100%;
   background-repeat: no-repeat;
   background-size: contain; 
+  cursor: pointer;
 }
 
 /*Aligns the button and the category title together*/
@@ -89,6 +91,11 @@ button {
   #scroll_up{
     margin-bottom: 4rem;
   }
+
+  #to_top {
+    width: auto;
+    padding: .5rem 1rem;
+  }
 }
 
 @media only screen and (min-width: 1024px){
@@ -109,6 +116,10 @@ button {
   button {
     margin-left: 4em;
     margin-right: 4em;
+  }
+
+  #to_top {
+    padding: .5rem 2rem;
   }
 }
 

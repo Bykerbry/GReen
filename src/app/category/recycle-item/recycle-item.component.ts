@@ -9,12 +9,13 @@ import { Component, OnInit, Input } from '@angular/core';
 export class RecycleItemComponent implements OnInit {
 @Input() values : any;
 @Input() category: string;
-cat : any;
+items : any[];
 
   constructor() { }
 
   ngOnInit() {
-    this.cat = this.values[this.category];
+    this.items = this.values[this.category];
+    console.log(this.items);
   }
 
 }

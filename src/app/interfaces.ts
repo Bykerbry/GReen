@@ -24,3 +24,11 @@ export interface IRoute {
       day: string;  
     }
 }
+
+export interface INotification {
+    icon: any;
+    headline: string;
+    datePosted: string;
+    description: string;
+    url:string;
+}

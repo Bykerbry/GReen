@@ -45,7 +45,10 @@ p, a {
     margin-bottom: .5rem;
 }
 
-
+.learn-more:focus,
+.learn-more:hover{
+    background: #178553;
+}
 
 @media only screen and (min-width: 760px) {
     .notification-container {

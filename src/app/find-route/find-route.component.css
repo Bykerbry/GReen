@@ -20,7 +20,7 @@ button {
     margin-left: 1em;
     height: 35px;
     box-shadow: rgb(73, 71, 71) 2px 2px 4px 0px;
-
+    cursor: pointer;
 }
 
 input {

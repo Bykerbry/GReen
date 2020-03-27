@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Inotification } from './inotification';
+import { INotification } from './../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FeedService {
-  notification: Inotification[] = [
+export class NotificationFeedService {
+  notification: INotification[] = [
    
     {
       icon: "assets/news_icon.png",
@@ -33,7 +33,7 @@ export class FeedService {
 
   constructor() { }
 
-  getNotifications() : Inotification[] {
+  getNotifications() : INotification[] {
     return this.notification;
   }
 }

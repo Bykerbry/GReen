@@ -43,7 +43,6 @@ export class ShareService {
   }
 
   setHomeView(onHome: boolean) {
-    console.log(this.onHomePage)
     this.onHomePage.next(onHome)
   }
   getHomeView(): Observable<boolean> {
