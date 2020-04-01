@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ICoords, IRoute, ILatLng } from '../interfaces';
 import { ShareService } from '../services/share.service';
 import { GetRoutesService } from '../services/get-routes.service';
-import { MapInfoWindow, MapPolygon } from '@angular/google-maps';
+import { MapInfoWindow } from '@angular/google-maps';
 import { RecycleCentersService } from '../services/recycle-centers.service';
 import { CategoriesService } from '../services/categories.service';
 import { GetPickupDateService } from '../services/get-pickup-date.service';
@@ -21,10 +21,11 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
   zoom: number;
   routes: IRoute[];
   labelLocation: any;
-  userRouteInfo: any;
+  userRouteInfo: any = { route: '', day: '' }
+  infoWindowInfo: any = { route: '', day: '' }
+  clicking: boolean = false;
   centerData: any;
   wantsRefuse: boolean;
-  userPolygon: any;
   subscription: any;
   userNextPickup: Date;
   isLocationSubmitted: boolean = false;
@@ -36,57 +37,64 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
     private _getRoutes: GetRoutesService, 
     private _recycleCenters: RecycleCentersService,
     private _category: CategoriesService,
-    private _pickupDate: GetPickupDateService) { }
+    private _pickupDate: GetPickupDateService,
+    private _cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.wantsRefuse = this._share.viewRefuse
-    this.centerData  = this._recycleCenters.getCenterData()
-
-    if (this._share.userSubmittedLocation) {
+    this.wantsRefuse         = this._share.viewRefuse
+    this.centerData          = this._recycleCenters.getCenterData()
+    this.clicking            = false
+  
+    // in case user starts from/bookmarks locations pg
+    if (this._getRoutes.refuseRoutes) {
       this.routes = this.wantsRefuse ? this._getRoutes.refuseRoutes : this._getRoutes.recycleRoutes
     } else {
       this.routes = this._getRoutes.getRoutes(this.wantsRefuse)
     }
+
     this.subscription = this._share.getLocation().subscribe((res: ICoords) => {
       this.center              = res.coords;
       this.zoom                = res.zoom;
-      this.isLocationSubmitted = this._share.userSubmittedLocation;
-      this.userRouteInfo       = this.getUserPolygon();
-      this.userNextPickup      = this._pickupDate.getRoute(this.center, this.wantsRefuse)
+      this.isLocationSubmitted = this._share.userSubmittedLocation
+      this.clicking            = false
+
+      if (this.isLocationSubmitted) {
+        this._pickupDate.getRoute(res.coords, true);
+        this._pickupDate.getRoute(res.coords, false);
+        this.userNextPickup = this.wantsRefuse ? this._pickupDate.refusePickupDate : this._pickupDate.recyclePickupDate
+        this.userRouteInfo  = this.wantsRefuse ? this._pickupDate.refuseRouteInfo : this._pickupDate.recycleRouteInfo
+        this._cdr.detectChanges()
+        this.placeInfoWindow()
+      }
     })
   }
 
   /***  Methods for Google Map + Polygons ****/
 
   onPolygonClick(polygon: any, event: any, info: any) {
+    this.clicking = true
+    // this._cdr.detectChanges()
     this.labelLocation = {
       lat: event.latLng.lat(),
       lng: event.latLng.lng()
     },
-    this.userRouteInfo.route = info.route
-    this.userRouteInfo.day = info.day
+    this.infoWindowInfo = info
     this.infoWindow.open(polygon)
   }
 
-  getUserPolygon() {
-    let location    = new google.maps.LatLng(this.center.lat, this.center.lng)
-    let userPolygon = []
-    let userRoute   = this.routes.filter(route => {
-      if (route.info.route) {
-        let poly = new google.maps.Polygon({ paths: route.coords });
-        if (google.maps.geometry.poly.containsLocation(location, poly)){
-          return userPolygon.push(poly)
-        } 
+  placeInfoWindow() {
+    if (this.infoWindow) {
+      this.labelLocation = this.center;
+      if (this.wantsRefuse) {
+        this.infoWindow.close()
+        this._cdr.detectChanges()
+        this.infoWindow.open(this._pickupDate.refusePolygon)
+      }  else {
+        this.infoWindow.close()
+        this._cdr.detectChanges()
+        this.infoWindow.open(this._pickupDate.recyclePolygon)
       }
-    })
-    this.labelLocation = location;
-    if( this.isLocationSubmitted && this.infoWindow) {
-      this.userNextPickup = this.wantsRefuse ? this._pickupDate.refusePickupDate : this._pickupDate.recyclePickupDate
-      this.userRouteInfo = userRoute[0].info
-      this.userPolygon = userPolygon[0]
-      this.infoWindow.open(userPolygon[0]);
     }
-    return userRoute[0].info;
   }
 
   toggleRoutes() {
@@ -97,7 +105,12 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.isLocationSubmitted) {
-      this.infoWindow.open(this.userPolygon)
+      this.labelLocation = this.center;
+      if (this.wantsRefuse) {
+        this.infoWindow.open(this._pickupDate.refusePolygon)
+      } else {
+        this.infoWindow.open(this._pickupDate.recyclePolygon)
+      }
     }
   }
 
@@ -139,17 +152,4 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.subscription.unsubscribe()
   }
-
-
-  visitLink() {
-    console.log("test");
-  }
-
-  /* 
-  To Do: 
-    1. Get Next Pick up date displaying instead of route day
-    2. Clickable markers
-    3. Get a different automotive location.
-    4. Get route displaying on home page.
-  */
 }

@@ -2,12 +2,13 @@
 <body>
   <div class="route-info-container">
     <div *ngIf="isLocationSubmitted" class="route-info">
+      <!-- another *ngIf to check if userRouteInfo is valid -->
       <div class="route-text-container">
         <p>Route:</p>
         <h2>{{ userRouteInfo.route }}</h2>
       </div>
       <div class="route-text-container">
-        <p>Next Pick-Up:</p>
+        <p>{{ wantsRefuse ? "Refuse" : "Recycle" }} Pick-Up:</p>
         <h2>{{ userNextPickup | date: "EEEE, MMMM d"}}</h2>    
       </div>
     </div>
@@ -50,11 +51,18 @@
         [paths]="route.coords" 
         (polygonClick)="onPolygonClick(poly, $event, route.info)">
       </map-polygon>
+
+        <map-info-window [position]='labelLocation'>
+          <div *ngIf="!clicking">
+            <p><b>Route </b>: {{ userRouteInfo.route }}</p>
+            <p><b>Pick-up </b>:{{ wantsRefuse ? "" : " Every other" }} {{ userRouteInfo.day | titlecase}}</p>  
+          </div>
+          <div *ngIf="clicking">
+            <p><b>Route </b>: {{ infoWindowInfo.route }}</p>
+            <p><b>Pick-up </b>:{{ wantsRefuse ? "" : " Every other" }} {{ infoWindowInfo.day | titlecase}}</p>  
+          </div>
+        </map-info-window>
       
-      <map-info-window [position]='labelLocation'>
-        <p><b>Route </b>: {{ userRouteInfo.route }}</p>
-        <p><b>Pick-up </b>:{{ wantsRefuse ? "" : " Every other" }} {{ userRouteInfo.day | titlecase}}</p>
-      </map-info-window>  
     </google-map>
   </div>
 

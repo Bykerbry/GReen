@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { LandingComponent } from '../landing/landing.component';
@@ -40,6 +40,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       this._getPickupDate.getRoute(coords.coords, false);
       this.refusePickupDate = this._getPickupDate.refusePickupDate;
       this.recyclePickupDate = this._getPickupDate.recyclePickupDate;
+      console.log(this.refusePickupDate)
+      console.log(this._getPickupDate.refuseRouteInfo);
+      console.log(this.recyclePickupDate);
+      console.log(this._getPickupDate.recycleRouteInfo);
     });
   }
 

@@ -18,25 +18,39 @@ export class GetPickupDateService {
   recycleRouteInfo: any
   recyclePickupDate: Date
 
+  refusePolygon: any
+  recyclePolygon: any
 
   getRoute(coords: ILatLng, isRefuse: boolean) {
     const mappedRoutes = this._getRoutes.getRoutes(isRefuse);
     const location     = new google.maps.LatLng(coords.lat, coords.lng);
+    const polyRefs     = []
 
     let userRoute = mappedRoutes.filter((route: IRoute) => {
+      if (route.info.route) {
         const poly = new google.maps.Polygon({ paths: route.coords });
-        return google.maps.geometry.poly.containsLocation(location, poly);
+        if (google.maps.geometry.poly.containsLocation(location, poly))
+          return polyRefs.push(poly)
+      }
     });
-    
-    const userPickUp = this.getNextPickUp(userRoute[0].info, isRefuse);
+    if (!userRoute[0]) { 
+      this.refusePickupDate = undefined
+      this.recyclePickupDate = undefined
+      return undefined
+    }
+    console.log(userRoute);
+    const userPickUp    = this.getNextPickUp(userRoute[0].info, isRefuse);
     const userRouteInfo = userRoute[1] ? userRoute[1].info : userRoute[0].info
-    
+    const userPolygon   = polyRefs[1] ? polyRefs[1] : polyRefs[0]
+ 
     if (isRefuse) {
-      this.refuseRouteInfo = userRouteInfo
-      this.refusePickupDate = userPickUp;
+      this.refuseRouteInfo   = userRouteInfo
+      this.refusePickupDate  = userPickUp;
+      this.refusePolygon     = userPolygon
     } else {
-      this.recycleRouteInfo = userRouteInfo
+      this.recycleRouteInfo  = userRouteInfo
       this.recyclePickupDate = userPickUp;
+      this.recyclePolygon    = userPolygon
     }
     return userPickUp
   }

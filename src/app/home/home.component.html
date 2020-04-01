@@ -12,9 +12,15 @@
                 </div>
                 <div class="bottom">
                     <div *ngIf="submittedLocation">
-                        <h2>Welcome! </h2>
-                        <p><b>Refuse Pickup:</b> {{ refusePickupDate | date: "EEEE, MMMM d"  }}</p>
-                        <p><b>Recycling Pickup:</b> {{ recyclePickupDate | date: "EEEE, MMMM d" }} </p>
+                        <div *ngIf="refusePickupDate">
+                            <h2>Welcome! </h2>
+                            <p><b>Refuse Pickup:</b> {{ refusePickupDate | date: "EEEE, MMMM d"  }}</p>
+                            <p><b>Recycling Pickup:</b> {{ recyclePickupDate | date: "EEEE, MMMM d" }} </p>    
+                        </div>
+                        <div *ngIf="!refusePickupDate">
+                            <h2>Welcome!</h2>
+                            <p>The location you have entered does not appear to be within any of the City of Grand Rapids Refuse/Recycle Routes.</p>
+                        </div>
                     </div>
                     <div *ngIf="!isLoading && !submittedLocation">
                         <h2>Welcome!</h2>
