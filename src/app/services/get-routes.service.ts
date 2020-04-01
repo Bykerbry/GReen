@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
 import { default as cityRecycleData } from 'src/assets/city-recycle-data.json'
 import { default as cityRefuseData } from 'src/assets/city-refuse-data.json'
 
@@ -9,7 +8,7 @@ import { default as cityRefuseData } from 'src/assets/city-refuse-data.json'
 export class GetRoutesService {
 
   // constructor(private http: HttpClient) { }
-
+  // No access
   // baseURL: string = 'http://grand-rapids-proxy.herokuapp.com/proxy/resource/ykbs-97kp.json'
 
   refuseRoutes: any

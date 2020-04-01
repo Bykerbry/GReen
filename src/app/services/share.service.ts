@@ -52,8 +52,4 @@ export class ShareService {
   setLoadingScreen() {
     this.isLoading = true;
   }
-  get
-
-  
-
 }

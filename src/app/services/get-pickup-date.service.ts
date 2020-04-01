@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { GetRoutesService } from './get-routes.service';
-import { ShareService } from './share.service';
 import { ILatLng, IRoute } from '../interfaces';
 
 
@@ -10,7 +9,7 @@ import { ILatLng, IRoute } from '../interfaces';
 })
 export class GetPickupDateService {
 
-  constructor(private _getRoutes: GetRoutesService, private _share: ShareService) { }
+  constructor(private _getRoutes: GetRoutesService) { }
 
   refuseRouteInfo: any
   refusePickupDate: Date
@@ -38,7 +37,6 @@ export class GetPickupDateService {
       this.recyclePickupDate = undefined
       return undefined
     }
-    console.log(userRoute);
     const userPickUp    = this.getNextPickUp(userRoute[0].info, isRefuse);
     const userRouteInfo = userRoute[1] ? userRoute[1].info : userRoute[0].info
     const userPolygon   = polyRefs[1] ? polyRefs[1] : polyRefs[0]
@@ -61,7 +59,7 @@ export class GetPickupDateService {
     const pickUpDate  = new Date()
 
     if (isRefuseData) {
-      if(index === pickUpDate.getDay() && pickUpDate.getHours() > 15) {
+      if(index === pickUpDate.getDay() && pickUpDate.getHours() >= 15) {
         pickUpDate.setDate(pickUpDate.getDate() + 7)
         return pickUpDate
       }

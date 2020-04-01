@@ -97,11 +97,11 @@
     <ng-container *ngFor="let category of centerData">
       <div class="category-container">
         <button  
-        (click)='getMarkers(category); scrollToElement(map)'
-        [id]='getCategoryName(category)'
-        [style.background-image]="getPath(getCategoryName(category))" 
-        class='category'
-        changeBackgroundImg> 
+          (click)='getMarkers(category); scrollToElement(map)'
+          [id]='getCategoryName(category)'
+          [style.background-image]="getPath(getCategoryName(category))" 
+          class='category'
+          changeBackgroundImg> 
         </button>
         <p class="category-label">{{ getCategoryName(category) | titlecase}}</p>  
       </div>

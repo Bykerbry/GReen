@@ -40,10 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this._getPickupDate.getRoute(coords.coords, false);
       this.refusePickupDate = this._getPickupDate.refusePickupDate;
       this.recyclePickupDate = this._getPickupDate.recyclePickupDate;
-      console.log(this.refusePickupDate)
-      console.log(this._getPickupDate.refuseRouteInfo);
-      console.log(this.recyclePickupDate);
-      console.log(this._getPickupDate.recycleRouteInfo);
     });
   }
 
@@ -54,5 +50,4 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._share.setHomeView(false)
   }
-
 }

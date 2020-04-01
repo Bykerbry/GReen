@@ -11,35 +11,22 @@ import { CategoryComponent } from './category/category.component';
 
 
 const routes: Routes = [
+
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'home',
+    component: HomeComponent
+  },
+  {
+    path: 'recyclables',
+    component: CategoryComponent
+  },
   {
     path: 'reportmissing',
     component: ReportMissingComponent
-  },
-  {
-    path: '',
-    component: HomeComponent,
-    children: [
-      {
-        path: 'feed',
-        component: FeedComponent,
-        children: [
-          {
-            path: 'notification',
-            component: NotificationComponent
-          }
-        ]
-      }
-    ]
-  },
-  {
-    path: 'recycleitems',
-    component: CategoryComponent,
-    children: [
-      {
-        path: 'items',
-        component: RecycleItemComponent
-      }
-    ]
   },
   {
     path: 'locations',
@@ -48,6 +35,11 @@ const routes: Routes = [
   {
     path: 'resources',
     component: ResourcesComponent
+  },
+  {
+    path: '**',
+    component: HomeComponent,
+    pathMatch: 'full'
   }
 ];
 
