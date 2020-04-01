@@ -15,7 +15,6 @@ items : any[];
 
   ngOnInit() {
     this.items = this.values[this.category];
-    console.log(this.items);
   }
 
 }

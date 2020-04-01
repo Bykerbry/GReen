@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CategoriesService } from '../services/categories.service'
 
 @Component({
@@ -9,25 +9,25 @@ import { CategoriesService } from '../services/categories.service'
 })
 export class CategoryComponent implements OnInit {
 
-  show: boolean = false;
+  show: boolean;
   categoryNames: string[] = []
   values : any;
   category : string;
   categories: any
 
-  constructor(private _category: CategoriesService) { }
+  constructor(private _category: CategoriesService, private _cdr: ChangeDetectorRef) { }
 
-  catSelected(catIndex : string){
+  catSelected(catIndex : string, $element){
    const index = this.categories.findIndex(category => {
       return Object.keys(category)[0] === catIndex;
     })
     this.values = this.categories[index];
     this.category = catIndex;
-    setTimeout( () => {
-      this.show = true;
-    }, 0)
     this.show = false;
-    return this.values;
+    this._cdr.detectChanges();
+    this.show = true;
+    this._cdr.detectChanges();
+    this.scrollToElement($element);
   }
 
   getPath(name: string) {
@@ -35,7 +35,7 @@ export class CategoryComponent implements OnInit {
   }
 
   scrollToElement($element): void {
-    $element.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+    $element.scrollIntoView({behavior: "smooth", block: "start"})
   }
 
   ngOnInit() {
