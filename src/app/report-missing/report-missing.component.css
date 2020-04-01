@@ -19,6 +19,21 @@
 h3 {
     display: flex;
     align-items: center;
+    text-align: center;
+    margin: 1em;
+}
+
+.continue-anyway {
+    color: #000;
+    border: none;
+    background-color: #FFF;
+}
+
+.continue-anyway:hover {
+    border: none;
+    background-color: #FFF;
+    text-decoration: underline;
+    color: #000;
 }
 
 input {
@@ -58,11 +73,6 @@ button:hover {
 
 .submit {
     margin: 1em;
-}
-
-a {
-    text-decoration: none;
-    color: white;
 }
 
 /* Desktop Only */

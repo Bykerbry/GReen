@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -8,12 +8,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class ReportMissingComponent implements OnInit {
 
-  @Input()
-  hidden : boolean = false;
-  step: string = 'start';
 
+  step: string = 'start';
   reportForm : FormGroup;
-  newDate = Date.now();
+  newDate = new Date();
+  before3: boolean
+  isToday: boolean
 
   constructor(private fb : FormBuilder) { 
     this.createForm();
@@ -35,23 +35,10 @@ export class ReportMissingComponent implements OnInit {
   yes(){
     let time = new Date().getHours();
     if (time < 15){
-      this.step = 'end-no';
-    } else {
-      this.step = 'end-yes';
-    }
-    // this.step = 'start-yes';
-  }
-
-  no(){
-    this.step = 'start-no';
-  }
-
-  noDate(){
-    this.step = 'end-no';
-  }
-
-  yesDate() {
-    this.step = 'end-yes';
+      this.before3 = true;
+    } 
+    this.isToday = true
+    this.step = 'before7AM'
   }
 
   submit(){

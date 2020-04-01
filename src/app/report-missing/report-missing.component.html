@@ -6,36 +6,35 @@
 
 <div class="form-wrapper">
     <div *ngIf="step === 'start'">
-        <div class="title1">
-            <h3>Was the bin placed near the curb before 7am today?</h3>
-        </div>
+        <h3>Are you reporting a missed pickup for today ({{ newDate | date: 'EEEE, MMMM d' }})?</h3>
         <div class = "placeBin">
             <button (click)="yes()">Yes</button>
-            <button (click)="no()">No</button>
+            <button (click)="step = 'before7AM'">No</button>
         </div>
     </div>
 
-    <div *ngIf="step === 'start-no'" class="title1">
-        <h3>Sorry, you missed your bin pickup!</h3>
-        <button routerLink=''>OK</button>
-    </div>
-
-    <div *ngIf="step === 'start-yes'">
+    <div *ngIf="step === 'before7AM'">
         <div class="title1">
-            <h3 class="title1">It's {{newDate | date: 'shortTime'}}, is it after 3:00pm today? </h3>
+            <h3>Was the bin placed near the curb before 7am {{ isToday ? "today" : "on your scheduled pickup day" }}?</h3>
         </div>
-        <div class= "placeBin">
-            <button (click)="yesDate()">Yes</button>
-            <button (click)="noDate()">No</button>
+        <div class = "placeBin">
+            <button (click)="step = before3 ? 'still-time' : 'to-form'">Yes</button>
+            <button (click)="step = 'sorry'">No</button>
         </div>
     </div>
 
-    <div *ngIf="step === 'end-no'" class="title1">
+    <div *ngIf="step === 'sorry'" class="title1">
+        <h3>Sorry! Bins placed by the curb after 7am may be missed. </h3>
+        <button routerLink=''>OK</button>
+        <button class="continue-anyway" (click)="step = 'to-form'">Continue anyway</button>
+    </div>
+
+    <div *ngIf="step === 'still-time'" class="title1">
         <h3 class="title1">It's {{newDate | date: 'shortTime'}}, there's still time for your bin to get picked up! Wait until after 3:00pm to report your missed pickup.</h3>
         <button routerLink=''>OK</button>
     </div>
  
-    <div *ngIf="step === 'end-yes'" [formGroup]="reportForm" novalidate>
+    <div *ngIf="step === 'to-form'" [formGroup]="reportForm" novalidate>
         <div>
             <p class="form">Name:</p>
             <input class="form-control" formControlName="name" required/>
