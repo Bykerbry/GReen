@@ -29,6 +29,7 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription: any;
   userNextPickup: Date;
   isLocationSubmitted: boolean = false;
+  inGR: boolean;
   markers: any[] = [];
   
    
@@ -44,23 +45,21 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wantsRefuse         = this._share.viewRefuse
     this.centerData          = this._recycleCenters.getCenterData()
     this.clicking            = false
-  
+    
     // in case user starts from/bookmarks locations pg
     if (this._getRoutes.refuseRoutes) {
       this.routes = this.wantsRefuse ? this._getRoutes.refuseRoutes : this._getRoutes.recycleRoutes
     } else {
       this.routes = this._getRoutes.getRoutes(this.wantsRefuse)
     }
-
     this.subscription = this._share.getLocation().subscribe((res: ICoords) => {
-      this.center              = res.coords;
-      this.zoom                = res.zoom;
+      this.center              = res.coords
+      this.zoom                = res.zoom
       this.isLocationSubmitted = this._share.userSubmittedLocation
       this.clicking            = false
+      this.inGR                = !!this._pickupDate.getRoute(res.coords, true)
 
-      if (this.isLocationSubmitted) {
-        this._pickupDate.getRoute(res.coords, true);
-        this._pickupDate.getRoute(res.coords, false);
+      if (this._pickupDate.getRoute(res.coords, false) && this.isLocationSubmitted) {
         this.userNextPickup = this.wantsRefuse ? this._pickupDate.refusePickupDate : this._pickupDate.recyclePickupDate
         this.userRouteInfo  = this.wantsRefuse ? this._pickupDate.refuseRouteInfo : this._pickupDate.recycleRouteInfo
         this._cdr.detectChanges()
@@ -73,7 +72,6 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onPolygonClick(polygon: any, event: any, info: any) {
     this.clicking = true
-    // this._cdr.detectChanges()
     this.labelLocation = {
       lat: event.latLng.lat(),
       lng: event.latLng.lng()
@@ -104,7 +102,7 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.isLocationSubmitted) {
+    if (this.isLocationSubmitted && this.inGR) {
       this.labelLocation = this.center;
       if (this.wantsRefuse) {
         this.infoWindow.open(this._pickupDate.refusePolygon)
@@ -150,6 +148,9 @@ export class LocationsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    if (this.infoWindow) {
+      this.infoWindow.close()
+    }
     this.subscription.unsubscribe()
   }
 }

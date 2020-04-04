@@ -35,6 +35,10 @@ export class GetPickupDateService {
     if (!userRoute[0]) { 
       this.refusePickupDate = undefined
       this.recyclePickupDate = undefined
+      this.refuseRouteInfo = undefined
+      this.recycleRouteInfo = undefined
+      this.refusePolygon = undefined
+      this.recyclePolygon = undefined
       return undefined
     }
     const userPickUp    = this.getNextPickUp(userRoute[0].info, isRefuse);

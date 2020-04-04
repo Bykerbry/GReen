@@ -1,7 +1,7 @@
 
 <body>
   <div class="route-info-container">
-    <div *ngIf="isLocationSubmitted" class="route-info">
+    <div *ngIf="isLocationSubmitted && inGR" class="route-info">
       <!-- another *ngIf to check if userRouteInfo is valid -->
       <div class="route-text-container">
         <p>Route:</p>
@@ -11,6 +11,9 @@
         <p>{{ wantsRefuse ? "Refuse" : "Recycle" }} Pick-Up:</p>
         <h2>{{ userNextPickup | date: "EEEE, MMMM d"}}</h2>    
       </div>
+    </div>
+    <div *ngIf="isLocationSubmitted && !inGR">
+      <h2>This Location is outside of all Grand Rapids Routes</h2>
     </div>
     <div *ngIf="!isLocationSubmitted" class="route-info">
       <h2>Enter a Location to See Route Info</h2>
